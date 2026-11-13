@@ -1,0 +1,20 @@
+.dart_tool/
+.packages
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+.idea/
+*.iml
+android/local.properties
+android/key.properties
+**/gradle/wrapper/gradle-wrapper.jar
+*.jks
+*.keystore
+.env
+
+# Local connection configuration
+config.local.json
+.env
+.env.*
