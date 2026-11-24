@@ -1,0 +1,39 @@
+name: soniq
+description: SONIQ - sua música, seu universo.
+publish_to: none
+version: 1.1.0+3
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.2
+  http: ^1.5.0
+  just_audio: ^0.9.40
+  just_audio_background: ^0.0.1-beta.13
+  audio_session: ^0.1.21
+  supabase_flutter: ^2.10.3
+  image_picker: ^1.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/branding/
+    - assets/covers/
+    - assets/genres/
+    - assets/wallpapers/
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/branding/app_icon.png
+  adaptive_icon_background: '#0B0617'
+  adaptive_icon_foreground: assets/branding/app_icon.png
