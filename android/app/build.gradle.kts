@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.example.soniq"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.11718014"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

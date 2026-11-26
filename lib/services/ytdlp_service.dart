@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import '../core/models/music_models.dart';
 
 class YtdlpService {
-  static const String _baseUrl = "http://localhost:5000";
+  static const String _baseUrl = "https://reentry-tacky-energize.ngrok-free.dev";
+
 
   static Future<List<Track>> searchMusic(String query) async {
     final url = Uri.parse('$_baseUrl/search?q=${Uri.encodeComponent(query)}');

@@ -16,7 +16,7 @@ def search():
         # Sem limite fixo — busca até 50 resultados
         ydl_opts = {
             'format': 'bestaudio/best',
-            'default_search': "ytsearch50",  # ← máximo 50 por busca
+            'default_search': "ytsearch7000",  # ← máximo 50 por busca
             'quiet': True,
             'no_warnings': True,
             'extract_flat': True,
