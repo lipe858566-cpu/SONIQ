@@ -7,8 +7,6 @@ import '../models/music_models.dart';
 import 'equalizer_service.dart';
 import 'download_store.dart';
 
-
-
 class AudioEngine {
   AudioEngine() {
     final android = !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
@@ -34,18 +32,24 @@ class AudioEngine {
 
   Future<AudioSource> _source(Track track) async {
     Uri uri = Uri.parse(track.audioUrl!);
-    try { final file = await DownloadStore.instance.fileFor(track.id); if (await file.exists()) uri = file.uri; } catch (_) {}
+    try { 
+      final file = await DownloadStore.instance.fileFor(track.id); 
+      if (await file.exists()) uri = file.uri; 
+    } catch (_) {}
+    
     return AudioSource.uri(
-        uri,
-        tag: MediaItem(
-          id: track.id,
-          title: track.title,
-          artist: track.artist,
-          album: track.album.isEmpty ? null : track.album,
-          artUri: track.artworkUrl == null ? null : Uri.tryParse(track.artworkUrl!),
-          duration: track.length == Duration.zero ? null : track.length,
-        ),
-      );
+      uri,
+      tag: MediaItem(
+        id: track.id,
+        title: track.title,
+        artist: track.artist,
+        album: track.album.isNotEmpty ? track.album : null,
+        artUri: track.artworkUrl != null && track.artworkUrl!.isNotEmpty 
+            ? Uri.tryParse(track.artworkUrl!) 
+            : null,
+        duration: track.length != Duration.zero ? track.length : null,
+      ),
+    );
   }
 
   Future<void> setQueue(List<Track> tracks, int startIndex, {Duration position = Duration.zero}) async {

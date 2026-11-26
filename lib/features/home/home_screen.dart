@@ -6,6 +6,7 @@ import '../../core/theme/soniq_theme.dart';
 import '../../core/widgets/neon_scaffold.dart';
 import '../library/library_screen.dart';
 import '../playlists/playlist_detail_screen.dart';
+import '../../screens/ytdlp_music_screen.dart';  // ✅ Import da tela de busca
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -33,21 +34,34 @@ class HomeScreen extends StatelessWidget {
       Text('Olá, ${state.displayName.split(' ').first} 👋', style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w800)),
       const SizedBox(height: 3),
       const Text('Pronto para ouvir algo novo?', style: TextStyle(color: SoniqColors.muted, fontSize: 13)),
-      const SizedBox(height: 10),
-      if (state.catalogLoading)
-        const Padding(padding: EdgeInsets.only(bottom: 10), child: Row(children: [
-          SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2)),
-          SizedBox(width: 10),
-          Text('Carregando músicas...', style: TextStyle(fontSize: 11)),
-        ]))
-      else if (state.catalogError != null)
-        Padding(padding: const EdgeInsets.only(bottom: 10), child: GlassPanel(
-          child: Text(state.catalogError!, style: const TextStyle(fontSize: 11, color: SoniqColors.muted)),
-        ))
-      else
-        const Padding(padding: EdgeInsets.only(bottom: 10), child: Text('🎧 As melhores músicas estão no SONIQ', style: TextStyle(fontSize: 11, color: SoniqColors.cyan))),
+      const SizedBox(height: 16),
+
+      // ✅ NOVO: Botão grande para buscar músicas
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          icon: const Icon(Icons.search, size: 22),
+          label: const Text('Buscar Músicas', style: TextStyle(fontSize: 16)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: SoniqColors.purple,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const YtdlpMusicScreen()),
+            );
+          },
+        ),
+      ),
+      const SizedBox(height: 20),
+
       const SizedBox(height: 17),
-      _DiscoveryBanner(onTap: () => state.setTab(1)),
+      const _DiscoveryBanner(),
       const SizedBox(height: 12),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         for (var i = 0; i < 4; i++) Container(
@@ -58,18 +72,18 @@ class HomeScreen extends StatelessWidget {
       ]),
       const SizedBox(height: 20),
       Row(children: [
-        _Shortcut(icon: Icons.graphic_eq_rounded, label: 'Mixes', color: SoniqColors.cyan, onTap: () => state.setTab(1)),
+        _Shortcut(icon: Icons.graphic_eq_rounded, label: 'Mixes', color: SoniqColors.cyan, onTap: () {}),
         const SizedBox(width: 9),
-        _Shortcut(icon: Icons.sensors_rounded, label: 'Rádios', color: state.accent, onTap: () => state.setTab(1)),
+        _Shortcut(icon: Icons.sensors_rounded, label: 'Rádios', color: state.accent, onTap: () {}),
         const SizedBox(width: 9),
-        _Shortcut(icon: Icons.explore_outlined, label: 'Explorar', color: SoniqColors.cyan, onTap: () => state.setTab(1)),
+        _Shortcut(icon: Icons.explore_outlined, label: 'Explorar', color: SoniqColors.cyan, onTap: () {}),
         const SizedBox(width: 9),
         _Shortcut(icon: Icons.grid_view_rounded, label: 'Mais', color: state.accent,
           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LibraryScreen()))),
       ]),
       const SizedBox(height: 23),
-      SectionTitle('Continue ouvindo', action: 'Ver tudo ›', onAction: () => state.setTab(2)),
-      if (first == null) const GlassPanel(child: Text('Seu histórico aparecerá aqui após ouvir músicas.')) else GlassPanel(
+      SectionTitle('Continue ouvindo', action: 'Ver tudo ›', onAction: () {}),
+      if (first == null) const GlassPanel(child: Text('Suas músicas ouvidas aparecerão aqui.')) else GlassPanel(
         padding: const EdgeInsets.all(9),
         onTap: () { state.selectTrack(first); state.setTab(2); },
         child: Row(children: [
@@ -78,14 +92,13 @@ class HomeScreen extends StatelessWidget {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(first.title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
             Text(first.artist, style: const TextStyle(color: SoniqColors.muted, fontSize: 11)),
-
           ])),
           const SizedBox(width: 10),
           Icon(Icons.play_circle_fill_rounded, size: 34, color: state.accent),
         ]),
       ),
       const SizedBox(height: 22),
-      SectionTitle('Playlists', action: '＋', onAction: () => state.setTab(3)),
+      SectionTitle('Playlists', action: '＋', onAction: () {}),
       SizedBox(height: 150, child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: state.playlists.length - 1,
@@ -110,12 +123,16 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _DiscoveryBanner extends StatelessWidget {
-  const _DiscoveryBanner({required this.onTap});
-  final VoidCallback onTap;
+  const _DiscoveryBanner();
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: onTap,
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const YtdlpMusicScreen()),
+      );
+    },
     child: Container(
       height: 170,
       decoration: BoxDecoration(
@@ -131,9 +148,9 @@ class _DiscoveryBanner extends StatelessWidget {
         )),
         child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
           const Expanded(child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Descobertas da Semana', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+            Text('Encontre músicas', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
             SizedBox(height: 3),
-            Text('Playlists personalizadas para você', style: TextStyle(fontSize: 11)),
+            Text('Busque e ouça agora mesmo', style: TextStyle(fontSize: 11)),
           ])),
           CircleAvatar(radius: 19, backgroundColor: SoniqColors.violet, child: const Icon(Icons.play_arrow_rounded, color: Colors.white)),
         ]),
@@ -161,7 +178,6 @@ class _Shortcut extends StatelessWidget {
     ]),
   ));
 }
-
 
 class _BrazilFlag extends StatelessWidget {
   const _BrazilFlag();
